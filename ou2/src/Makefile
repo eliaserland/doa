@@ -7,7 +7,7 @@ SRC = stack.c
 OBJ = $(SRC:.c=.o)
 
 CC = gcc
-CFLAGS = -std=c99 -Wall -I../../include -g
+CFLAGS = -std=c99 -Wall -I../include -g
 
 all:	mwe stack_test
 
