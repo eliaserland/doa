@@ -85,24 +85,42 @@ void top_element_test()
  */
 void push_pop_test()
 {
-	stack *s = stack_empty(NULL);
-	
+	// Create two identical stacks
+	stack *s1 = stack_empty(NULL);
+	stack *s2 = stack_empty(NULL);
 	for (int i = 1; i <= 3; i++) {
-		int *v = malloc(sizeof(*v));
-		*v = i * 5;		
-		s = stack_push(s,v);
+		int *v1 = malloc(sizeof(*v1));
+		int *v2 = malloc(sizeof(*v2));
+		*v1 = i * 5;	
+		*v2 = i * 5;		
+		s1 = stack_push(s1,v1);
+		s2 = stack_push(s2,v2);
 	}
+			
+	// Push one value to s1
+	int *v = malloc(sizeof(*v));
+	*v = 100;
+	s1 = stack_push(s1,v);
 	
-
-	//test here (MISSING)
+	// Pop one value from s1
+	s1 = stack_pop(s1);
+	free(v);
 	
-	
-	while (!stack_is_empty(s)) {
-		int *v = stack_top(s);
-		s = stack_pop(s);
-		free(v);
+	// Compare stacks s1 and s2 while deallocating 
+	while (!stack_is_empty(s1) && !stack_is_empty(s2)) {
+		int *v1 = stack_top(s1);
+		int *v2 = stack_top(s2);
+		if (*v1 != *v2) {
+			fprintf(stderr, "FAIL: Stack has changed after push-pop!\n");
+			exit(EXIT_FAILURE);
+		}
+		s1 = stack_pop(s1);
+		s2 = stack_pop(s2);
+		free(v1);
+		free(v2);
 	}
-	stack_kill(s);	
+	stack_kill(s1);	
+	stack_kill(s2);	
 }
 
 /*
