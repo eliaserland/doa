@@ -12,7 +12,6 @@
  * 	2020-04-XX: v1.0. First public version.
  */
 
-
 /*
  *	Axiom 1 test: Isempty(Empty()) == true
  * 	Verify that a newly created stack is empty. 
@@ -27,18 +26,18 @@ void empty_stack_test()
 	stack_kill(s);
 }
 
-
 /*
  *	Axiom 2 test: !Isempty(Push(v,s)) == true
- *	Verify that if an element is pushed to a new stack, the stack is no 
- *	longer empty.   
+ *	Verify that if an value is pushed to a new stack, the stack is not 
+ *	empty.   
  */
-void one_element_test()
+void nonempty_stack_test()
 {
 	stack *s = stack_empty(NULL);
 	int *v = malloc(sizeof(*v));
 	*v = 19;	
 	s = stack_push(s,v); 
+	
 	if (stack_is_empty(s)) {
 		fprintf(stderr, "FAIL: Stack with one element is empty!\n");
 		exit(EXIT_FAILURE);
@@ -54,10 +53,10 @@ void one_element_test()
 
 /*
  *	Axiom 4 test: Top(Push(v,s)) == v
- *	Verify that an element pushed to the top of a stack can be retrived 
+ *	Verify that an value pushed to the top of a stack can be retrived 
  * 	from the top of the stack. 	
  */
-void element_value_test() 
+void top_element_test() 
 {
 	stack *s = stack_empty(NULL);
 	int *v = malloc(sizeof(*v));
@@ -79,6 +78,58 @@ void element_value_test()
 	stack_kill(s);	
 }
 
+/*
+ *	Axiom 3 test: Pop(Push(v,s)) == s
+ *	Verify that after pushing one element to the stack, followed by removing
+ *	one element from the stack, we recover the inital stack. 
+ */
+void push_pop_test()
+{
+	stack *s = stack_empty(NULL);
+	
+	for (int i = 1; i <= 3; i++) {
+		int *v = malloc(sizeof(*v));
+		*v = i * 5;		
+		s = stack_push(s,v);
+	}
+	
+
+	//test here (MISSING)
+	
+	
+	while (!stack_is_empty(s)) {
+		int *v = stack_top(s);
+		s = stack_pop(s);
+		free(v);
+	}
+	stack_kill(s);	
+}
+
+/*
+ *	Axiom 5 test: !Isempty(s) -> Push(Top(s),Pop(s)) == s
+ *	Verify that for a non-empty stack, we recover the initial stack after 
+ *	removing the first element and then putting it back.
+ */
+void nonempty_pop_push_test() 
+{
+	stack *s = stack_empty(NULL);
+	
+	for (int i = 1; i <= 3; i++) {
+		int *v = malloc(sizeof(*v));
+		*v = i * 5;		
+		s = stack_push(s,v);
+	}
+	
+	//test here (MISSING)
+		
+	while (!stack_is_empty(s)) {
+		int *v = stack_top(s);
+		s = stack_pop(s);
+		free(v);
+	}
+	stack_kill(s);
+}
+
 
 
 int main(void) 
@@ -87,17 +138,25 @@ int main(void)
 	empty_stack_test();
 	fprintf(stderr, "OK.\n");
 	
-	fprintf(stderr, "Running TEST2: one_element_test(): ");
-	one_element_test();
+	fprintf(stderr, "Running TEST2: nonempty_stack_test(): ");
+	nonempty_stack_test();
 	fprintf(stderr, "OK.\n");
 	
-	fprintf(stderr, "Running TEST3: element_value_test(): ");
-	element_value_test();
+	fprintf(stderr, "Running TEST3: top_element_test(): ");
+	top_element_test();
+	fprintf(stderr, "OK.\n");
+
+	fprintf(stderr, "Running TEST4: push_pop_test(): ");
+	push_pop_test();
+	fprintf(stderr, "OK.\n");
+		
+	fprintf(stderr, "Running TEST5: nonempty_pop_push_test(): ");
+	nonempty_pop_push_test();
 	fprintf(stderr, "OK.\n");
 
 
 	fprintf(stderr, "SUCCESS: Implementation passed all tests. Normal exit.\n");
-
+	
 	return 0;
 }
 
