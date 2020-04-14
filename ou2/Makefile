@@ -1,5 +1,10 @@
 # Makefile for OU2, compilation of stack_test.c w/ dependencies
 # DOA LP4 2020
+#
+# Useage:
+# make 			- compile all binaries
+# make clean		- clean all binaries 
+# make memtest		- test for memory leaks with valgrind
 
 EXE = stack_test
 
