@@ -53,12 +53,12 @@ void nonempty_stack_test()
 }
 
 /*
- * Axiom 4 test: Top(Push(v,s)) == v
+ * Axiom 4, test 1: Top(Push(v,s)) == v
  * Verify that an value pushed to the top of a stack can be inspected to be at 
  * the top of that stack. Exits and prints an error message if the value at the
  * top of the stack is different from the one expected. 
  */
-void top_element_test() 
+void one_element_test() 
 {
 	stack *s = stack_empty(NULL);
 	int *v = malloc(sizeof(*v));
@@ -81,10 +81,59 @@ void top_element_test()
 }
 
 /*
- * Axiom 3 test: Pop(Push(v,s)) == s
- * Verify that after pushing one element to the stack, followed by removing one
- * element from the stack, we recover the inital stack. Exits and prints an 
- * error message if the stack has changed after the push-pop operations.
+ * top(push()) == v 	Test 2 multiple elements
+ *
+ */
+void multiple_element_test()
+{
+	stack *s = stack_empty(NULL);
+	
+	for () {
+	
+	}
+	while (!stack_is_empty(s)) {
+		int *v = stack_top(s);
+		s = stack_pop(s);
+		free(v);
+	}
+	stack_kill(s);		
+}
+
+
+
+
+
+
+/*
+ * Axiom 3, test 1: Pop(Push(v,s)) == s
+ * Verify that after pushing a single value to a new stack, followed by removing
+ * the top value of that same stack, we recover the the initial (empty) stack. 
+ * Exits and prints an error message if the stack is not empty.
+ */
+void empty_push_pop_test()
+{
+	stack *s = stack_empty(NULL);
+	int *v1 = malloc(sizeof(*v1));
+	*v1 = 17;		
+	s = stack_push(s,v1);
+	
+	int *v2 = stack_top(s);
+	s = stack_pop(s);
+	free(v2);
+	
+	if (!stack_is_empty(s)) {
+		fprintf(stderr, "FAIL: Stack is not empty after push-pop!\n");
+		exit(EXIT_FAILURE);
+	}
+	stack_kill(s);
+}
+
+/*
+ * Axiom 3, test 2: Pop(Push(v,s)) == s
+ * Verify that after pushing one element to a nonempty stack, followed by 
+ * removing one element from the same stack, we recover the inital stack. 
+ * Exits and prints an error message if the stack has changed after the 
+ * push-pop operations.
  */
 void push_pop_test()
 {
@@ -181,7 +230,7 @@ void nonempty_pop_push_test()
 
 
 /*
- * Different types test
+ * Different types of values test
  */
 
 /*
@@ -204,15 +253,19 @@ int main(void)
 	nonempty_stack_test();
 	fprintf(stderr, "OK.\n");
 	
-	fprintf(stderr, "Running TEST3: top_element_test(): ");
-	top_element_test();
+	fprintf(stderr, "Running TEST3: one_element_test(): ");
+	one_element_test();
 	fprintf(stderr, "OK.\n");
 
-	fprintf(stderr, "Running TEST4: push_pop_test(): ");
+	fprintf(stderr, "Running TEST4: empty_push_pop_test(): ");
+	empty_push_pop_test();
+	fprintf(stderr, "OK.\n");
+
+	fprintf(stderr, "Running TEST5: push_pop_test(): ");
 	push_pop_test();
 	fprintf(stderr, "OK.\n");
 		
-	fprintf(stderr, "Running TEST5: nonempty_pop_push_test(): ");
+	fprintf(stderr, "Running TEST6: nonempty_pop_push_test(): ");
 	nonempty_pop_push_test();
 	fprintf(stderr, "OK.\n");
 
