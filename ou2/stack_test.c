@@ -4,12 +4,12 @@
 #include "stack.h"
 
 /*
- * OU2 DOA LP4 2020 - Test program for stack implementaion in stack.c.
+ * OU2 DOA LP4 2020 - Test program for stack implementation in stack.c.
  *	
  * Author: Elias Olofsson (tfy17eon@cs.umu.se)
  *
  * Version information:
- * 	2020-04-XX: v1.0. First public version.
+ * 	2020-04-15: v1.0. First public version.
  */
 
 /*
@@ -283,59 +283,34 @@ void pop_push_test()
 	stack_kill(s2);	
 }
 
-
-
-/*
- * Different types of values test
- */
-
-/*
- *	
- */
- 
- /*
- *
- */
-
-
-
 int main(void) 
 {	
 	fprintf(stderr, "Running TEST1: empty_stack_test(): ");
 	empty_stack_test();
 	fprintf(stderr, "OK.\n");
-	
 	fprintf(stderr, "Running TEST2: nonempty_stack_test(): ");
 	nonempty_stack_test();
 	fprintf(stderr, "OK.\n");
-	
 	fprintf(stderr, "Running TEST3: one_element_test(): ");
 	one_element_test();
 	fprintf(stderr, "OK.\n");
-
 	fprintf(stderr, "Running TEST4: multiple_elements_test(): ");
 	multiple_elements_test();
 	fprintf(stderr, "OK.\n");
-	
 	fprintf(stderr, "Running TEST5: empty_push_pop_test(): ");
 	empty_push_pop_test();
 	fprintf(stderr, "OK.\n");
-
 	fprintf(stderr, "Running TEST6: push_pop_test(): ");
 	push_pop_test();
 	fprintf(stderr, "OK.\n");
-	
 	fprintf(stderr, "Running TEST7: minimal_pop_push_test(): ");	
 	minimal_pop_push_test();
 	fprintf(stderr, "OK.\n");
-			
 	fprintf(stderr, "Running TEST8: pop_push_test(): ");
 	pop_push_test();
 	fprintf(stderr, "OK.\n");
 
-
 	fprintf(stderr, "SUCCESS: Implementation passed all tests. Normal exit.\n");
-	
 	return 0;
 }
 
