@@ -207,7 +207,7 @@ void minimal_pop_push_test()
 	s1 = stack_push(s1,v1);
 	s2 = stack_push(s2,v2);
 	
-	// Retrive top value and pop top element in s1
+	// Retrieve top value and pop top element in s1
 	int *v = stack_top(s1);
 	s1 = stack_pop(s1);
 	
@@ -255,7 +255,7 @@ void pop_push_test()
 		s2 = stack_push(s2,v2);
 	}
 	
-	// Retrive top value and pop top element in s1
+	// Retrieve top value and pop top element in s1
 	int *v = stack_top(s1);
 	s1 = stack_pop(s1);
 	
