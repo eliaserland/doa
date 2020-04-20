@@ -27,11 +27,11 @@ void empty_stack_test()
 }
 
 /*
- * Axiom 2 test: !Isempty(Push(v,s)) == true
+ * Axiom 2, test 1: !Isempty(Push(v,s)) == true
  * Verify that if a value is pushed to a new stack, the stack is not empty. 
  * Exits and prints an error message if the stack is empty.  
  */
-void nonempty_stack_test()
+void nonempty_stack_test1()
 {
 	stack *s = stack_empty(NULL);
 	int *v = malloc(sizeof(*v));
@@ -43,6 +43,33 @@ void nonempty_stack_test()
 		exit(EXIT_FAILURE);
 	}
 	
+	while (!stack_is_empty(s)) {
+		int *v = stack_top(s);
+		s = stack_pop(s);
+		free(v);
+	}
+	stack_kill(s);
+}
+
+/*
+ * Axiom 2, test 2: !Isempty(Push(v,s)) == true
+ * Verify that if a value is pushed to a stack containing multiple elements, the
+ * stack is not empty. Exits and prints an error message if the stack is empty.  
+ */
+void nonempty_stack_test2()
+{
+	stack *s = stack_empty(NULL);
+	for (int i = 1; i <= 5; i++) {
+		int *v = malloc(sizeof(*v));
+		*v = i * i * i;
+		s = stack_push(s,v);
+	}
+
+	if (stack_is_empty(s)) {
+		fprintf(stderr, "FAIL: Stack with multiple element is empty!\n");
+		exit(EXIT_FAILURE);
+	}
+
 	while (!stack_is_empty(s)) {
 		int *v = stack_top(s);
 		s = stack_pop(s);
@@ -287,25 +314,28 @@ int main(void)
 	fprintf(stderr, "Running TEST1: empty_stack_test(): ");
 	empty_stack_test();
 	fprintf(stderr, "OK.\n");
-	fprintf(stderr, "Running TEST2: nonempty_stack_test(): ");
-	nonempty_stack_test();
+	fprintf(stderr, "Running TEST2: nonempty_stack_test1(): ");
+	nonempty_stack_test1();
 	fprintf(stderr, "OK.\n");
-	fprintf(stderr, "Running TEST3: one_element_test(): ");
+	fprintf(stderr, "Running TEST3: nonempty_stack_test2(): ");
+	nonempty_stack_test2();
+	fprintf(stderr, "OK.\n");
+	fprintf(stderr, "Running TEST4: one_element_test(): ");
 	one_element_test();
 	fprintf(stderr, "OK.\n");
-	fprintf(stderr, "Running TEST4: multiple_elements_test(): ");
+	fprintf(stderr, "Running TEST5: multiple_elements_test(): ");
 	multiple_elements_test();
 	fprintf(stderr, "OK.\n");
-	fprintf(stderr, "Running TEST5: empty_push_pop_test(): ");
+	fprintf(stderr, "Running TEST6: empty_push_pop_test(): ");
 	empty_push_pop_test();
 	fprintf(stderr, "OK.\n");
-	fprintf(stderr, "Running TEST6: push_pop_test(): ");
+	fprintf(stderr, "Running TEST7: push_pop_test(): ");
 	push_pop_test();
 	fprintf(stderr, "OK.\n");
-	fprintf(stderr, "Running TEST7: minimal_pop_push_test(): ");	
+	fprintf(stderr, "Running TEST8: minimal_pop_push_test(): ");	
 	minimal_pop_push_test();
 	fprintf(stderr, "OK.\n");
-	fprintf(stderr, "Running TEST8: pop_push_test(): ");
+	fprintf(stderr, "Running TEST9: pop_push_test(): ");
 	pop_push_test();
 	fprintf(stderr, "OK.\n");
 
