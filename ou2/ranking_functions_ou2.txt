@@ -1,0 +1,82 @@
+/*
+ * Axiom 1 test: Isempty(Empty()) == true
+ * Verify that a newly created stack is empty. Exits and prints an error 
+ * message if stack is not empty.
+ */
+void empty_stack_test() // rank 1
+
+/*
+ * Axiom 2, test 1: !Isempty(Push(v,s)) == true
+ * Verify that if a value is pushed to a new stack, the stack is not empty. 
+ * Exits and prints an error message if the stack is empty.  
+ */
+void nonempty_stack_test1() // rank 2
+
+/*
+ * Axiom 4, test 1: Top(Push(v,s)) == v
+ * Verify that a value pushed to an empty stack can be inspected to be at 
+ * the top of that stack. Exits and prints an error message if the value at the
+ * top of the stack is different from the one expected. 
+ */
+void one_element_test() // rank 3
+
+/*
+ * Axiom 3, test 1: Pop(Push(v,s)) == s
+ * Verify that after pushing a value to a new stack, followed by removing
+ * the top element of that same stack, we recover the the initial (empty) stack. 
+ * Exits and prints an error message if the stack is not empty.
+ */
+void empty_push_pop_test() // rank 4
+
+/*
+ * Axiom 2, test 2: !Isempty(Push(v,s)) == true
+ * Verify that if a value is pushed to a stack containing multiple elements, the
+ * stack is not empty. Exits and prints an error message if the stack is empty.  
+ */
+void nonempty_stack_test2()
+
+/*
+ * Axiom 4, test 2: Top(Push(v,s)) == v
+ * Verify that a the value last pushed to a stack can be inspected to be at the
+ * top of that stack. Exits and prints an error message if the value at the
+ * top is different from the one expected. 
+ */
+void multiple_elements_test()
+
+/*
+ * Axiom 3, test 2: Pop(Push(v,s)) == s
+ * Verify that after pushing a value to a nonempty stack, followed by 
+ * removing the top element from the same stack, we recover the inital stack. 
+ * Exits and prints an error message if the stack has changed after the 
+ * push-pop operations.
+ */
+void push_pop_test()
+
+/*
+ * Axiom 5, test 1: !Isempty(s) -> Push(Top(s),Pop(s)) == s
+ * Verify that for a stack with one element, we recover the initial stack after 
+ * removing the first element and then putting it back. Exits and prints an 
+ * error message if the single valued stack has changed after the pop-push 
+ * operation. 
+ */
+void minimal_pop_push_test() 
+
+/*
+ * Axiom 5, test 2: !Isempty(s) -> Push(Top(s),Pop(s)) == s
+ * Verify that for a general non-empty stack, we recover the initial stack after 
+ * removing the first element and then putting it back. Exits and prints an 
+ * error message if the stack has changed (ordering and values) after the 
+ * pop-push operation. 
+ */
+void pop_push_test() 
+
+
+
+
+
+
+
+
+
+
+

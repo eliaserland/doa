@@ -8,7 +8,7 @@
  * Author: Elias Olofsson (tfy17eon@cs.umu.se)
  *
  * Version information:
- * 	2020-04-15: v1.0. First public version.
+ * 	2020-04-21: v1.0. First public version.
  */
 
 /*
@@ -212,7 +212,6 @@ void push_pop_test()
 	stack_kill(s1);	
 	stack_kill(s2);	
 }
-
 
 /*
  * Axiom 5, test 1: !Isempty(s) -> Push(Top(s),Pop(s)) == s
