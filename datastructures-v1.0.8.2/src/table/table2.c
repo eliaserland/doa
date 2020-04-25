@@ -186,8 +186,8 @@ void table_remove(table *t, const void *key)
                                         // of this pointer to the very end.
                                         deferred_ptr = entry->key;
                                 } else {
-				t->key_free_func(entry->key);
-			}
+					t->key_free_func(entry->key);
+				}
                         }
 			if (t->value_free_func != NULL) {
 				t->value_free_func(entry->value);
