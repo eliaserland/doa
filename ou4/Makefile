@@ -1,10 +1,18 @@
-# Makefile for OU4
+# Makefile for OU4, Author: Elias Olofsson
 # DOA LP4 2020
 #
 # Useage:
-# make 			- compile all binaries
-# make clean		- clean all binaries 
-# make memtest		- test for memory leaks with valgrind
+#   make 				- Compile all test programs
+#   make clean				- Clean all binaries
+#   make obj				- Compile all object files 
+#
+#   make tabletest			- Compile specific test program
+#   make mtftabletest
+#   make arraytabletest
+#
+#   make memtest_table2			- Test for memory leaks with valgrind
+#   make memtest_mtf
+#   make memtest_array
 
 EXE = tabletest mtftabletest arraytabletest 
 
