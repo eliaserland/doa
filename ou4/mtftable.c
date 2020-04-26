@@ -7,7 +7,7 @@
 /*
  * Implementation of a generic table for the "Datastructures and
  * algorithms" courses at the Department of Computing Science, Umea
- * University. Table constructed as an "move-to-front" dynamical directed list.
+ * University. Table constructed as an "move-to-front" directed, dynamic list.
  *
  * Duplicates are handled by inspect and remove.
  *
@@ -119,7 +119,10 @@ void *table_lookup(const table *t, const void *key)
 		struct table_entry *entry = dlist_inspect(t->entries, pos);
 		// Check if the entry key matches the search key.
 		if (t->key_cmp_func(entry->key, key) == 0) {
-			// If yes, return the corresponding value pointer.
+			// If yes, return the corresponding value pointer and 				   move entry element to the front of the list.
+			dlist_remove(t->entries, pos);			
+			dlist_insert(t->entries, entry, 
+				     dlist_first(t->entries));
 			return entry->value;
 		}
 		// Continue with the next position.

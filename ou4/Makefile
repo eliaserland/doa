@@ -2,17 +2,18 @@
 # DOA LP4 2020
 #
 # Useage:
-#   make 				- Compile all test programs
-#   make clean				- Clean all binaries
-#   make obj				- Compile all object files 
+#   make 				   - Compile all test programs
+#   make clean				   - Clean all binaries
+#   make obj				   - Compile all object files 
 #
-#   make tabletest			- Compile specific test program
+#   make tabletest	   		   - Compile specific test program
 #   make mtftabletest
 #   make arraytabletest
 #
-#   make memtest_table2			- Test for memory leaks with valgrind
-#   make memtest_mtf
-#   make memtest_array
+#   make memtest ARGS="-n -t 1000"	   - Test for memory leaks with valgrind
+#   make memtest_table2 ARGS="-n -t 1000"
+#   make memtest_mtf ARGS="-n -t 1000"
+#   make memtest_array ARGS="-n -t 1000" 
 
 EXE = tabletest mtftabletest arraytabletest 
 
@@ -30,6 +31,7 @@ OBJ = $(OBJ_table2) $(OBJ_dlist) $(OBJ_array)
 CC = gcc
 CFLAGS = -std=c99 -Wall -g -I../datastructures-v1.0.8.2/include
 
+
 all: exe
 
 # All executable test programs
@@ -37,6 +39,8 @@ exe: $(EXE)
 
 # Object file for library
 obj: $(OBJ)
+
+memtest: memtest_table2 memtest_mtf memtest_array
 
 # Clean up
 clean:
@@ -52,10 +56,10 @@ arraytabletest: tabletest-1.9.c	arraytable.c $(SRC_array)
 	gcc -o $@ $(CFLAGS) $^
 
 memtest_table2:	tabletest
-	valgrind --leak-check=full --show-reachable=yes ./$<
+	valgrind --leak-check=full --show-reachable=yes ./$< $(ARGS)
 	
 memtest_mtf: mtftabletest
-	valgrind --leak-check=full --show-reachable=yes ./$<
+	valgrind --leak-check=full --show-reachable=yes ./$< $(ARGS)
 	
 memtest_array: arraytabletest
-	valgrind --leak-check=full --show-reachable=yes ./$<	
+	valgrind --leak-check=full --show-reachable=yes ./$< $(ARGS)	
