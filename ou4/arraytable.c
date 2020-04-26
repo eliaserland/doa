@@ -1,5 +1,6 @@
 #include <stdlib.h>
 #include <stdio.h>
+#include <string.h>
 
 #include "table.h"
 #include "array_1d.h"
@@ -20,7 +21,44 @@
  * Version information:
  *   2020-05-XX: v1.0, first public version.   
  */
- 
+
+// ===========INTERNAL DATA TYPES============
+
+#define TABLE_SIZE 80000
+
+struct table {
+	array_1d *entries;
+	compare_function *key_cmp_func;
+	free_function key_free_func;
+	free_function value_free_func;
+};
+
+struct table_entry {
+	void *key;
+	void *value;
+};
+
+
+// ===========INTERNAL FUNCTION IMPLEMENTATIONS============
+
+
+
+/*
+ *	
+ *
+ */
+int stringHash(void *key) 
+{
+	char *str = (char *)key;
+	int seed = 131;
+	int hash = 0;
+	for (int i = 0; i < strlen(str); i++) {
+		hash = (hash * seed) + str[i];
+	}
+	return hash % TABLE_SIZE;
+}
+
+
 /**
  * table_empty() - Create an empty table.
  * @key_cmp_func: A pointer to a function to be used to compare keys.
@@ -35,7 +73,17 @@ table *table_empty(compare_function *key_cmp_func,
 		   free_function key_free_func,
 		   free_function value_free_func)
 {
+	// Allocate the table header.
+	table *t = calloc(1, sizeof(table));
+	// Create the array to hold the table_entry-ies. Size of table will be 
+	// [0, TABLE_SIZE-1].
+	t->entries = array_1d_create(0 ,TABLE_SIZE-1 , NULL);
+	// Store the key compare function and key/value free functions.
+	t->key_cmp_func = key_cmp_func;
+	t->key_free_func = key_free_func;
+	t->value_free_func = value_free_func;
 	
+	return t;
 }
 
 /**
@@ -46,10 +94,15 @@ table *table_empty(compare_function *key_cmp_func,
  */
 bool table_is_empty(const table *t)
 {
-	
+	for (int i = 0; i < TABLE_SIZE; i++) {
+		if (array_1d_has_value(t->entries, i)) {
+			return false;
+		}
+	}	
+	return true;
 }
 
-/**
+/** MODIFY THIS COMMENT HERE BEFORE SUBMISSION !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
  * table_insert() - Add a key/value pair to a table.
  * @table: Table to manipulate.
  * @key: A pointer to the key value.
@@ -64,7 +117,41 @@ bool table_is_empty(const table *t)
  */
 void table_insert(table *t, void *key, void *value)
 {
+	// hash_function to find hash value of key
+	int hash; //NEED HASH FUNCTION HERE
 	
+
+	// While hash position is not empty, check for key duplicate. 
+	int i = 0;
+	while (array_1d_has_value(t->entries, hash)) {
+		
+		// Inspect table entry
+		struct table_entry *current_entry; 
+		current_entry = array_1d_inspect_value(t->entries, hash);	
+		
+		// Check if keys match
+		if ((t->key_cmp_func(current_entry->key, key)) == 0) {
+			
+			// If we have a match, call free function for the value 
+			// of this entry.
+			if (t->value_free_func != NULL) {
+				t->value_free_func(current_entry->value);
+			}
+			// Set pointer to new value and exit.
+			current_entry->value = value;
+			return;			
+		}
+		// Increment hash position quadratically.
+		i++;
+		hash = hash + i*i;
+	}
+	// Current position in table is empty, allocate and insert the key/value 
+	// structure at this position.
+	struct table_entry *entry = malloc(sizeof(struct table_entry));	
+	entry->key = key;
+	entry->value = value;	
+	
+	array_1d_set_value(t->entries, entry, hash);		
 }
 
 /**
@@ -78,6 +165,27 @@ void table_insert(table *t, void *key, void *value)
  */
 void *table_lookup(const table *t, const void *key)
 {
+	// hash_function to find hash value of key
+	int hash; //NEED HASH FUNCTION HERE
+	
+	// While hash position is not empty, check for key match.	
+	while (array_1d_has_value(t->entries, hash)) {
+	
+		// Inspect table entry
+		struct table_entry *entry; 
+		entry = array_1d_inspect_value(t->entries, hash);
+	
+		// Check if keys match
+		if ((t->key_cmp_func(entry->key, key)) == 0) {
+			// If yes, return corresponding value pointer
+			return entry->value;	
+		}	
+		// Continue and increment hash position quadratically.
+		i++;
+		hash = hash + i*i;
+	}
+	// No match found, return NULL. 
+	return NULL;
 	
 }
 
@@ -93,7 +201,12 @@ void *table_lookup(const table *t, const void *key)
  */
 void *table_choose_key(const table *t)
 {
-	
+	// Return first key in array.
+	int i = 0;
+	while (!array_1d_has_value(t->entries, i)) {
+		i++;
+	}
+	return array_1d_inspect_value(t->entries, i)->key;
 }
 
 /**
@@ -109,7 +222,34 @@ void *table_choose_key(const table *t)
  */
 void table_remove(table *t, const void *key)
 {
+	// hash_function to find hash value of key
+	int hash; //NEED HASH FUNCTION HERE
 	
+	// While hash position is not empty, check for key match.	
+	while (array_1d_has_value(t->entries, hash)) { 
+		
+		// Inspect table entry
+		struct table_entry *entry; 
+		entry = array_1d_inspect_value(t->entries, hash);
+	
+		// Check if keys match
+		if ((t->key_cmp_func(entry->key, key)) == 0) {
+			
+			// If yes, deallocate corresponding table entry
+			if (t->key_free_func != NULL) {
+				t->key_free_func(entry->key);
+			}
+			if (t->value_free_func != NULL) {
+				t->value_free_func(entry->value);
+			}
+			array_1d_set_value(t->entries, NULL, hash);
+			free(entry);
+			return;					
+		}	
+		// Continue and increment hash position quadratically.
+		i++;
+		hash = hash + i*i;	
+	}
 }
 
 /*
