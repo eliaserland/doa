@@ -265,7 +265,23 @@ void table_remove(table *t, const void *key)
  */
 void table_kill(table *t)
 {
-	
+	for (int i = 0; i < TABLE_SIZE; i++) {
+		if (array_1d_has_value(t->entries, i)) {
+			
+			struct table_entry *entry; 
+			entry = array_1d_inspect_value(t->entries, i);
+					
+			if (t->key_free_func != NULL) {
+				t->key_free_func(entry->key);
+			}
+			if (t->value_free_func != NULL) {
+				t->value_free_func(entry->value);
+			}
+			free(entry);
+		}
+	}
+	array_1d_kill(t->entries);
+	free(t);
 }
 
 /**
@@ -280,5 +296,11 @@ void table_kill(table *t)
  */
 void table_print(const table *t, inspect_callback_pair print_func)
 {
-	
+	for (int i = 0; i < TABLE_SIZE; i++) {
+		if (array_1d_has_value(t->entries, i)) {
+			struct table_entry *e = array_1d_inspect_value(t->entries, i);	
+			print_func(e->key, e->value);
+		}
+	}
 }
+
