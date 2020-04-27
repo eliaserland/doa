@@ -10,10 +10,10 @@
 #   make mtftabletest
 #   make arraytabletest
 #
-#   make memtest ARGS="-n -t 1000"	   - Test for memory leaks with valgrind
-#   make memtest_table2 ARGS="-n -t 1000"
-#   make memtest_mtf ARGS="-n -t 1000"
-#   make memtest_array ARGS="-n -t 1000" 
+#   make memtest args="-n -t 1000"	   - Test for memory leaks with valgrind
+#   make memtest_table2 args="-n -t 1000"
+#   make memtest_mtf args="-n -t 1000"
+#   make memtest_array args="-n -t 1000" 
 
 EXE = tabletest mtftabletest arraytabletest 
 
@@ -56,10 +56,10 @@ arraytabletest: tabletest-1.9.c	arraytable.c $(SRC_array)
 	gcc -o $@ $(CFLAGS) $^
 
 memtest_table2:	tabletest
-	valgrind --leak-check=full --show-reachable=yes ./$< $(ARGS)
+	valgrind --leak-check=full --show-reachable=yes ./$< $(args)
 	
 memtest_mtf: mtftabletest
-	valgrind --leak-check=full --show-reachable=yes ./$< $(ARGS)
+	valgrind --leak-check=full --show-reachable=yes ./$< $(args)
 	
 memtest_array: arraytabletest
-	valgrind --leak-check=full --show-reachable=yes ./$< $(ARGS)	
+	valgrind --leak-check=full --show-reachable=yes ./$< $(args)	
