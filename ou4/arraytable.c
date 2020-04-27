@@ -57,7 +57,7 @@ unsigned int hash_function(const void *key)
 	
 	length = sprintf(str, "%d", *int_ptr);
 	
-	int seed = 13131;
+	int seed = 13131; // Magic number
 	unsigned int hash = 0;
 	
 	for (int i = 0; i < length; i++) {
