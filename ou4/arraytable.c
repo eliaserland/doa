@@ -52,7 +52,7 @@ struct table_entry {
 unsigned int hash_function(const void *key) 
 {
 	// Allocate string buffer and length of string
-	char str[256];
+	char str[16];
 	int length = 0;
 	
 	// Typecast the key to int, only "keeping" the first 4 bytes of data
