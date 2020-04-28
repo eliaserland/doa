@@ -1,6 +1,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
+#include <inttypes.h>
 
 #include "table.h"
 #include "array_1d.h"
@@ -50,16 +51,19 @@ struct table_entry {
  */
 unsigned int hash_function(const void *key) 
 {
-	// Allocate string buffer, pointer to integer, and length of string.
+	// Allocate string buffer and length of string
 	char str[256];
-	const int *int_ptr = key;
 	int length = 0;
 	
+	// Typecast the key to int, only "keeping" the first 4 bytes of data
+	const int32_t *int_ptr = key;
+	
+	// Convert int to a string, save length of string
 	length = sprintf(str, "%d", *int_ptr);
 	
-	int seed = 13131; // Magic number
+	// Hash string
 	unsigned int hash = 0;
-	
+	int seed = 13131; // Magic number
 	for (int i = 0; i < length; i++) {
 		hash = (hash * seed) + str[i];
 	}
