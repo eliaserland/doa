@@ -13,7 +13,8 @@
  * found using a simple hash function. Hash collisions are handled by closed,
  * quadratically incremented searches.
  *
- * Duplicates are handled at element insertion.
+ * Duplicates are handled at element insertion. A "removed" marker will be 
+ * placed in the array at element removal.
  *
  * Author: Elias Olofsson (tfy17eon@cs.umu.se) 
  *
@@ -25,12 +26,12 @@
  *   2020-05-XX: v1.0, first public version.   
  */
 
-// ===========INTERNAL CONSTANTS============
+// ==================INTERNAL CONSTANTS=====================
 
 // Size of table to generate
-#define TABLE_SIZE 131313
+#define TABLE_SIZE 80021
 
-// ===========INTERNAL DATA TYPES============
+// ==================INTERNAL DATA TYPES====================
 
 struct table {
 	array_1d *entries;
@@ -47,23 +48,27 @@ struct table_entry {
 
 // ===========INTERNAL FUNCTION IMPLEMENTATIONS============
 
-/*
- *	POSSIBLY NOT VALID HASH FUNCTION
- *
+/**
+ * hash_function() - Hash the given key to an useable array index.
+ * @key: A pointer to the key value. Key has to be of int type or char array 
+ *	 with at least 4 characters. Only the first 4 bytes of the key will be 
+ *	 used in the hashing process.	
+ * 
+ * Returns: Array index corresponding to the key value.  
  */
 unsigned int hash_function(const void *key) 
 {
-	// Allocate string buffer and length of string
+	// Allocate string buffer and length of string.
 	char str[16];
 	int length = 0;
 	
-	// Typecast the key to int, only "keeping" the first 4 bytes of data
+	// Typecast the key to int, only "keeping" the first 4 bytes of data.
 	const int32_t *int_ptr = key;
 	
-	// Convert int to a string of numbers, save the length of the string
+	// Convert int to a string of numbers, save the length of the string.
 	length = sprintf(str, "%d", *int_ptr);
 	
-	// Hash the string
+	// Hash the string.
 	unsigned int hash = 0;
 	int seed = 13131; // Magic number
 	for (int i = 0; i < length; i++) {
@@ -111,16 +116,17 @@ bool table_is_empty(const table *t)
 	return t->nr_of_elements == 0;
 }
 
-/** MODIFY THIS COMMENT HERE BEFORE SUBMISSION !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+/**
  * table_insert() - Add a key/value pair to a table.
  * @table: Table to manipulate.
  * @key: A pointer to the key value.
  * @value: A pointer to the value value.
  *
- * Insert the key/value pair into the table. No test is performed to
- * check if key is a duplicate. table_lookup() will return the latest
- * added value for a duplicate key. table_remove() will remove all
- * duplicates for a given key.
+ * Insert the key/value pair into the table. A call upon the hash function 
+ * generates an index in the array for the given key. Checks for key duplicates
+ * and previously populated elements are performed for the position given by the
+ * hash. Duplicates are removed and collisions are dealt with closed, quadratic 
+ * increments of the position in the array.
  *
  * Returns: Nothing.
  */
@@ -129,7 +135,8 @@ void table_insert(table *t, void *key, void *value)
 	// hash_function to find hash value of key
 	unsigned int hash = hash_function(key); 
 
-	// While hash position is not empty, check for key duplicate. 
+	// While hash position is not empty, check for "removed key" marker and
+	// key duplicate. 
 	int i = 0;
 	while (array_1d_has_value(t->entries, hash)) {
 		
@@ -151,7 +158,6 @@ void table_insert(table *t, void *key, void *value)
 		
 		// Check if keys match in current table_entry
 		if ((t->key_cmp_func(current_entry->key, key)) == 0) {
-			
 			// If we have a key match, call free function for the 
 			// old key/value pair of this entry. 
 			if (t->key_free_func != NULL) {
@@ -169,7 +175,7 @@ void table_insert(table *t, void *key, void *value)
 		i++;
 		hash = (hash + i*i) % TABLE_SIZE;
 	}
-	// Current position in table is empty, allocate and insert the key/value 
+	// Current position in table is empty, allocate and insert new key/value 
 	// structure at this position.
 	struct table_entry *entry = malloc(sizeof(struct table_entry));	
 	entry->key = key;
@@ -185,9 +191,13 @@ void table_insert(table *t, void *key, void *value)
  * @table: Table to inspect.
  * @key: Key to look up.
  *
+ * A call to the hash function generates an index corresponding to the key 
+ * value. Until the matching key is found or we reach an empty array element, 
+ * increment the hash position quadratically, checking key values and 
+ * skipping over "removed" markers. 
+ * 
  * Returns: The value corresponding to a given key, or NULL if the key
- * is not found in the table. If the table contains duplicate keys,
- * the value that was latest inserted will be returned.
+ * is not found in the table.
  */
 void *table_lookup(const table *t, const void *key)
 {
@@ -240,7 +250,6 @@ void *table_choose_key(const table *t)
 	struct table_entry *entry;
 	
 	while (searching) {	
-	
 		// Check if current position is nonempty
 		if (array_1d_has_value(t->entries, i)) {
 		
@@ -270,8 +279,8 @@ void *table_choose_key(const table *t)
  * @table: Table to manipulate.
  * @key: Key for which to remove pair.
  *
- * Any matching duplicates will be removed. Will call any free
- * functions set for keys/values. Does nothing if key is not found in
+ * Places a "removed" marker at the position of the key/value pair. Will call 
+ * any free functions set for keys/values. Does nothing if key is not found in
  * the table.
  *
  * Returns: Nothing.
@@ -303,8 +312,6 @@ void table_remove(table *t, const void *key)
 				if (t->value_free_func != NULL) {
 					t->value_free_func(entry->value);
 				}
-				//array_1d_set_value(t->entries, NULL, hash);
-				//free(entry);
 				
 				// Leave the table_entry, but set key and value 
 				// pointers to NULL. This is the indication of a
