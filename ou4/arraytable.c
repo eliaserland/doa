@@ -33,7 +33,7 @@ struct table {
 	compare_function *key_cmp_func;
 	free_function key_free_func;
 	free_function value_free_func;
-	int nr_of_elements;
+	int index_last_pos;
 };
 
 struct table_entry {
@@ -59,12 +59,14 @@ table *table_empty(compare_function *key_cmp_func,
 {
 	// Allocate the table header.
 	table *t = calloc(1, sizeof(table));
-	// Create the list to hold the table_entry-ies.
-	t->entries = dlist_empty(NULL);
+	// Create the array to hold the table_entry-ies. Size of table will be 
+	// [0, TABLE_SIZE-1].
+	t->entries = array_1d_create(0 ,TABLE_SIZE-1 , NULL);
 	// Store the key compare function and key/value free functions.
 	t->key_cmp_func = key_cmp_func;
 	t->key_free_func = key_free_func;
 	t->value_free_func = value_free_func;
+	t->index_last_pos = -1;
 
 	return t;
 }
@@ -77,7 +79,7 @@ table *table_empty(compare_function *key_cmp_func,
  */
 bool table_is_empty(const table *t)
 {
-	
+	return t->index_last_pos == -1;
 }
 
 /**
@@ -95,7 +97,39 @@ bool table_is_empty(const table *t)
  */
 void table_insert(table *t, void *key, void *value)
 {
+	// While current position is nonempty, check for duplicate key.
+	int i = 0;
+	while (array_1d_has_value(t->entries, i)) {
+		// Inspect table entry
+		struct table_entry *entry = array_1d_inspect_value(t->entries, i);
+		
+		// Check if keys match in current table_entry
+		if ((t->key_cmp_func(entry->key, key)) == 0) {
+			// If we have a key match, call free function for the 
+			// old key/value pair of this entry. 
+			if (t->key_free_func != NULL) {
+				t->key_free_func(entry->key);		
+			}
+			if (t->value_free_func != NULL) {
+				t->value_free_func(entry->value);	
+			}
+			// Set pointers to new key/value pair and exit.
+			entry->key = key;
+			entry->value = value;
+			return;			
+		}
+		i++;
+	}
+	// Current position in table is empty, allocate and insert new key/value 
+	// structure at this position.
+	struct table_entry *entry = malloc(sizeof(struct table_entry));	
+	entry->key = key;
+	entry->value = value;
 	
+	// Set pointer to table entry in array, increment pos of last element 
+	// in array.
+	array_1d_set_value(t->entries, entry, i);
+	t->index_last_pos++;	
 }
 
 /**
@@ -109,7 +143,21 @@ void table_insert(table *t, void *key, void *value)
  */
 void *table_lookup(const table *t, const void *key)
 {
-	
+	// While current position is not empty, check for key match.
+	int i = 0;	
+	while (array_1d_has_value(t->entries, i) && i < TABLE_SIZE) {
+		// Inspect table entry
+		struct table_entry *entry = array_1d_inspect_value(t->entries, i);
+		
+		// Check if keys match in current table_entry
+		if ((t->key_cmp_func(entry->key, key)) == 0) {
+			// If yes, return corresponding value pointer
+			return entry->value;
+		}
+		i++;
+	}
+	// No match found, return NULL.
+	return NULL;
 }
 
 /**
@@ -124,7 +172,9 @@ void *table_lookup(const table *t, const void *key)
  */
 void *table_choose_key(const table *t)
 {
-	
+	// Return first key value.
+	struct table_entry *entry = array_1d_inspect_value(t->entries, 0);
+	return entry->key;
 }
 
 /**
@@ -140,7 +190,42 @@ void *table_choose_key(const table *t)
  */
 void table_remove(table *t, const void *key)
 {
-        
+        // While current position is not empty, check for key match.
+	int i = 0;	
+	while (array_1d_has_value(t->entries, i) && i < TABLE_SIZE) {
+		// Inspect table entry
+		struct table_entry *entry = array_1d_inspect_value(t->entries, i);
+		
+		// Check if keys match in current table entry
+		if ((t->key_cmp_func(entry->key, key)) == 0) {
+			// If yes, deallocate corresponding key & value at 
+			// current position
+			if (t->key_free_func != NULL) {
+				t->key_free_func(entry->key);
+			}
+			if (t->value_free_func != NULL) {
+				t->value_free_func(entry->value);
+			}
+			// Get pointer to the last table_entry in the array
+			struct table_entry *last_entry; 
+			last_entry = array_1d_inspect_value(t->entries, t->index_last_pos);
+			
+			// Move last entry contents to fill "hole" after removed
+			// element.
+			entry->key = last_entry->key;
+			entry->value = last_entry->value;
+			
+			// Set last array pos to empty and free last table entry  
+			array_1d_set_value(t->entries, NULL, t->index_last_pos);
+			free(last_entry);
+			
+			// Decrement accordingly
+			t->index_last_pos--;
+			return;
+			
+		}
+		i++;
+	}
 }
 
 /*
@@ -156,7 +241,29 @@ void table_remove(table *t, const void *key)
  */
 void table_kill(table *t)
 {
-	
+	// Iterate over the populated first part of the array. Destroy all 
+	// elements.
+	int i = 0;	
+	while (array_1d_has_value(t->entries, i) && i < TABLE_SIZE) {
+		
+		// Inspect element
+		struct table_entry *entry; 
+		entry = array_1d_inspect_value(t->entries, i);
+		
+		// If freeing functions are specified, deallocate key/value.
+		if (t->key_free_func != NULL) {
+				t->key_free_func(entry->key);
+		}
+		if (t->value_free_func != NULL) {
+			t->value_free_func(entry->value);
+		}
+		// Free current table_entry 
+		free(entry);
+		i++;
+	}
+	// Destroy the rest of the table structure
+	array_1d_kill(t->entries);
+	free(t);
 }
 
 /**
@@ -171,5 +278,10 @@ void table_kill(table *t)
  */
 void table_print(const table *t, inspect_callback_pair print_func)
 {
-	
+	int i = 0;	
+	while (array_1d_has_value(t->entries, i) && i < TABLE_SIZE) {	
+		struct table_entry *e = array_1d_inspect_value(t->entries, i);	
+		print_func(e->key, e->value);
+	}
 }
+
