@@ -9,7 +9,7 @@
  * algorithms" courses at the Department of Computing Science, Umea
  * University. Table constructed as an one dimensional array.
  *
- * Duplicates are handled by inspect and remove.
+ * Duplicates are handled at element insertion.
  *
  * Author: Elias Olofsson (tfy17eon@cs.umu.se) 
  *
@@ -88,10 +88,9 @@ bool table_is_empty(const table *t)
  * @key: A pointer to the key value.
  * @value: A pointer to the value value.
  *
- * Insert the key/value pair into the table. No test is performed to
- * check if key is a duplicate. table_lookup() will return the latest
- * added value for a duplicate key. table_remove() will remove all
- * duplicates for a given key.
+ * Insert the key/value pair into the table. Starts from the beginning of the 
+ * array and checks for key duplicates until either a matching key or an empty 
+ * element is discovered.
  *
  * Returns: Nothing.
  */
@@ -138,8 +137,7 @@ void table_insert(table *t, void *key, void *value)
  * @key: Key to look up.
  *
  * Returns: The value corresponding to a given key, or NULL if the key
- * is not found in the table. If the table contains duplicate keys,
- * the value that was latest inserted will be returned.
+ * is not found in the table.
  */
 void *table_lookup(const table *t, const void *key)
 {
@@ -182,8 +180,10 @@ void *table_choose_key(const table *t)
  * @table: Table to manipulate.
  * @key: Key for which to remove pair.
  *
- * Any matching duplicates will be removed. Will call any free
- * functions set for keys/values. Does nothing if key is not found in
+ * Starts from the beginnning of the array and searches for the key/value pair 
+ * to remove. Once found, freeing functions for key/value are called if 
+ * specified. The last table entry in the array is moved forwards to fill the 
+ * "hole" after the removed element. Does nothing if key is not found in
  * the table.
  *
  * Returns: Nothing.
@@ -208,7 +208,8 @@ void table_remove(table *t, const void *key)
 			}
 			// Get pointer to the last table_entry in the array
 			struct table_entry *last_entry; 
-			last_entry = array_1d_inspect_value(t->entries, t->index_last_pos);
+			last_entry = array_1d_inspect_value(t->entries, 
+							    t->index_last_pos);
 			
 			// Move last entry contents to fill "hole" after removed
 			// element.
@@ -222,7 +223,6 @@ void table_remove(table *t, const void *key)
 			// Decrement accordingly
 			t->index_last_pos--;
 			return;
-			
 		}
 		i++;
 	}
