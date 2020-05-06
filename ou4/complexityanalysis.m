@@ -34,7 +34,7 @@ avg_matrix = [avg_table2 , avg_mtf(:,2), avg_array(:,2), avg_hash(:,2)]
 %-------------------------------------------
 % Plot timed results
 for i = 2:5
-   plot(avg_matrix(:,1), avg_matrix(:,i));
+   plot(avg_matrix(:,1), avg_matrix(:,i), '.-');
    hold on
 end
 
@@ -68,7 +68,7 @@ rel_avg_matrix = [avg_matrix(:,1), avg_matrix(:,2:5)./avg_matrix(:,1)];
 
 figure
 for i = 2:5
-   plot(rel_avg_matrix(:,1), rel_avg_matrix(:,i));
+   plot(rel_avg_matrix(:,1), rel_avg_matrix(:,i), '.-');
    hold on
 end
 
