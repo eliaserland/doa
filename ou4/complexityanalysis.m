@@ -13,13 +13,13 @@
 % ------------------------------------------------------------------------
 clear all; close all; clc;
 
-test_nr = 5; %Test nr 1-5 is valid.
+test_nr = 2; %Test nr 1-5 is valid.
 
 % Load data
-DATA_table2 = load('time_table2.txt');
-DATA_mtf = load('time_mtf.txt');
-DATA_array = load('time_array.txt');
-DATA_hash = load('time_hash.txt');
+DATA_table2 = load('./data/time_table2.txt');
+DATA_mtf = load('./data/time_mtf.txt');
+DATA_array = load('./data/time_array.txt');
+DATA_hash = load('./data/time_hash.txt');
 
 
 % Calculate avgerages
@@ -56,9 +56,8 @@ switch test_nr
         title('Skewed successful lookup speed')
 end
 
-offset = 500;
-scale = 0.75;
-set(gcf, 'Position', [500 + offset, 100 + offset, scale*500, scale*400])
+
+set(gcf, 'Position', [1000, 600, 0.75*500, 0.75*400])
 
 
 %-------------------------------------------
@@ -90,10 +89,7 @@ switch test_nr
         title('Skewed successful lookup speed')
 end
 
-offset = 500;
-scale = 0.75;
-set(gcf, 'Position', [1000 + offset, 100 + offset, scale*500, scale*400])
-
+set(gcf, 'Position', [1500, 600, 0.75*500, 0.75*400])
 
 
 
