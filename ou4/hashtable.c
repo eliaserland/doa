@@ -23,7 +23,7 @@
  * 			     Johan Eliasson (johane@cs.umu.se).
  *
  * Version information:
- *   2020-05-XX: v1.0, first public version.   
+ *   2020-05-07: v1.0, first public version.   
  */
 
 // ==================INTERNAL CONSTANTS=====================
