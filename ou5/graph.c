@@ -36,11 +36,11 @@
 // Anonymous declarations of node and graph.
 struct node {
 	//Code here
-}
+}; 
 
 struct graph {
 	//Code here
-}
+};
 
 // =================== NODE COMPARISON FUNCTION ======================
 
