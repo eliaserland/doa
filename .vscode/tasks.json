@@ -11,6 +11,9 @@
 				"-o",
 				"${fileDirname}/${fileBasenameNoExtension}"
 			],
+			"presentation": {
+				"clear": true 	// Will clear the terminal
+			},
 			"options": {
 				"cwd": "/usr/bin"
 			},
