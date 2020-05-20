@@ -30,24 +30,6 @@ int first_non_white_space(const char *s)
         }
 }
 
-/* Return position of last non-whitespace character or -1 if only
-   white-space is found. */
-int last_non_white_space(const char *s)
-{
-        // Start at last char.
-        int i = strlen(s) - 1;
-        // Move back until we hit beginning-of-line as long as we're
-        // loooking at white-space.
-        while (i >= 0 && isspace(s[i])) {
-                i--;
-        }
-        if (i >= 0) {
-                return i; // Return position of found a non-white-space char.
-        } else {
-                return -1; // Return fail.
-        }
-}
-
 /* Return true if s only contains whitespace */
 bool line_is_blank(const char *s)
 {
@@ -61,6 +43,11 @@ bool line_is_comment(const char *s)
         int i = first_non_white_space(s);
         return (i >= 0 && s[i] == '#');
 }
+
+
+
+
+
 
 
 #define BUFSIZE 300             /* Max 300 char per line */
@@ -91,21 +78,25 @@ int main(int argc, char **argv)
 	} 
 	
 	// Repeat until end-of-file
+	bool first_line = true;
+	int nr_edges;
+	char node[40];
+	char neighbour[40];
+
 	while (fgets(line, BUFSIZE, in) != NULL) {
 		if (line_is_blank(line) || line_is_comment(line)) {
                         // Ignore blank lines and comment lines.
                         continue;
                 }
-
-		printf("%s",line);
-		/*const char *node;
-		const char *neighbour;
-		int beg = first_non_white_space(line);
-		while () {
-
-		}*/
-
-
+		
+		if (first_line){
+			sscanf(line,"%d", &nr_edges);
+			first_line = false;
+		} else {
+			sscanf(line, "%40s %40s", node, neighbour);
+			
+			/* Insert nodes and edges intro graph.*/
+		}
 	}
 
 	// Close file
