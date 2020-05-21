@@ -71,7 +71,7 @@ void populate_graph(const char *filename) // CHANGE RETURN TYPE !!!!!!!!!!!!!!!
 	char neighbour[40];
 
 	int tmp = 0;
-	while (fgets(line, BUFSIZE, in) != NULL) {
+	while (fgets(line, BUFSIZE, in)!= NULL) {
 		if (line_is_blank(line) || line_is_comment(line)) {
                         // Ignore blank lines and comment lines.
                         continue;
@@ -82,7 +82,7 @@ void populate_graph(const char *filename) // CHANGE RETURN TYPE !!!!!!!!!!!!!!!
 		if (first_line){
 			sscanf(line,"%d", &nr_edges);
 			printf("Number of edges in graph: %d.\n", nr_edges);
-			//graph *g = graph_empty(nr_edges);
+			//graph *g = graph_empty(2*nr_edges);
 			
 			first_line = false;
 		} else {
@@ -139,13 +139,14 @@ int main(int argc, char **argv)
 
 			// NEED TO CHECK USER INPUT !!!
 
+			/*
 			path_test = find_path(g, src, dst);
 			if (path_test) {
 				printf();
 			} else {
 				printf();
 			}
-			
+			*/
 
 			/* Perform search */
 		}
