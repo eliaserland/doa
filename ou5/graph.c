@@ -100,7 +100,7 @@ dlist *clone_dlist(const dlist* l)
 		const char *str = dlist_inspect(l, p_old);
 
 		// Create dyamic copy of the string.
-		const char *str_cpy = copy_string(str);
+		char *str_cpy = copy_string(str);
 		
 		// Insert string into the new list.
 		p_new = dlist_insert(new_list, str_cpy, p_new);
@@ -197,7 +197,7 @@ graph *graph_insert_node(graph *g, const char *s)
 	node *n = malloc(sizeof(node));
 
 	// Make a dynamic copy of the input string and insert into the node.
-	const char *str = copy_string(s);
+	char *str = copy_string(s);
 	n->label = str;
 
 	// Initialize the node as not seen.
@@ -314,7 +314,7 @@ graph *graph_insert_edge(graph *g, node *n1, node *n2)
 	if (n1_found && n2_found) {
 		/* Make a dynamic copy of the destination node label and insert 
 		   into the list of neighbours for the source node.*/
-		const char *str = copy_string(n2->label);
+		char *str = copy_string(n2->label);
 		dlist_pos pos =  dlist_first(neighbourlist);
 		dlist_insert(neighbourlist, str, pos);
 	}

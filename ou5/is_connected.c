@@ -13,6 +13,7 @@
 
 
 
+
 /* Return position of first non-whitespace character or -1 if only
    white-space is found. */
 int first_non_white_space(const char *s)
@@ -221,7 +222,7 @@ int main(int argc, char **argv)
 			running = false;
 		} else {
 			sscanf(str, "%40s %40s", src, dst);
-			printf("Source: %s, Destination: %s.\n", src, dst);
+			//printf("Source: %s, Destination: %s.\n", src, dst);
 
 			// NEED TO CHECK USER INPUT !!!
 
@@ -246,6 +247,8 @@ int main(int argc, char **argv)
 			
 		}
 	}
+
+	graph_kill(g);
 	printf("Normal exit.\n");
 	return 0;
 }
