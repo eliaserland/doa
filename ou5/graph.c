@@ -417,6 +417,9 @@ void graph_kill(graph *g)
 		// Deallocate the label and the node strucure itself.
 		free(n->label);
 		free(n);
+
+		// Traverse the array
+		i++;
 	}
 	// Destroy the array and the graph itself.
 	array_1d_kill(g->node_array);

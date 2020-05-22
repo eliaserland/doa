@@ -10,7 +10,12 @@
 				"${file}",
 				"-o",
 				"${fileDirname}/${fileBasenameNoExtension}",
-				"-I/home/elias/Documents/doa/datastructures-v1.0.8.2/include"
+				"-I/home/elias/Documents/doa/datastructures-v1.0.8.2/include",
+				"/home/elias/Documents/doa/ou5/graph.c",
+				"/home/elias/Documents/doa/datastructures-v1.0.8.2/src/queue/queue.c",
+				"/home/elias/Documents/doa/datastructures-v1.0.8.2/src/dlist/dlist.c",
+				"/home/elias/Documents/doa/datastructures-v1.0.8.2/src/array_1d/array_1d.c",
+				"/home/elias/Documents/doa/datastructures-v1.0.8.2/src/list/list.c",
 			],
 			"presentation": {
 				"clear": true 	// Will clear the terminal
