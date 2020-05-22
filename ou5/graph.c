@@ -177,7 +177,7 @@ bool graph_has_edges(const graph *g)
  *
  * Returns: The modified graph.
  */
-graph *graph_insert_node(graph *g, const char *s) // Need
+graph *graph_insert_node(graph *g, const char *s)
 {
 	/* While current position in array is nonempty, check for duplicate 
 	   node. */
