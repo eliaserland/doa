@@ -1,6 +1,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <stdbool.h>
+#include <string.h>
 
 #include "graph.h"
 #include "array_1d.h"
@@ -151,10 +152,10 @@ graph *graph_empty(int max_nodes)
  *
  * Returns: True if graph is empty, otherwise false.
  */
-bool graph_is_empty(const graph *g)
+/*bool graph_is_empty(const graph *g)
 {
 
-}
+}*/
 
 /**
  * graph_has_edges() - Check if a graph has any edges.
@@ -162,10 +163,10 @@ bool graph_is_empty(const graph *g)
  *
  * Returns: True if graph has any edges, otherwise false.
  */
-bool graph_has_edges(const graph *g) 
+/*bool graph_has_edges(const graph *g) 
 {
 
-}
+}*/
 
 /**
  * graph_insert_node() - Inserts a node with the given name into the graph.
@@ -330,10 +331,10 @@ graph *graph_insert_edge(graph *g, node *n1, node *n2)
  *
  * NOTE: Undefined if the node is not in the graph.
  */
-graph *graph_delete_node(graph *g, node *n) 
+/*graph *graph_delete_node(graph *g, node *n) 
 {
 
-}
+}*/
 
 /**
  * graph_delete_edge() - Remove an edge from the graph.
@@ -345,10 +346,10 @@ graph *graph_delete_node(graph *g, node *n)
  *
  * NOTE: Undefined if the edge is not in the graph.
  */
-graph *graph_delete_edge(graph *g, node *n1, node *n2) 
+/*graph *graph_delete_edge(graph *g, node *n1, node *n2) 
 {
 
-}
+}*/
 
 /**
  * graph_choose_node() - Return an arbitrary node from the graph.
@@ -358,10 +359,10 @@ graph *graph_delete_edge(graph *g, node *n1, node *n2)
  *
  * NOTE: The return value is undefined for an empty graph.
  */
-node *graph_choose_node(const graph *g)
+/*node *graph_choose_node(const graph *g)
 {
 
-}
+}*/
 
 /**
  * graph_neighbours() - Return a list of neighbour nodes.
@@ -430,8 +431,8 @@ void graph_kill(graph *g)
  *
  * Returns: Nothing.
  */
-void graph_print(const graph *g)
+/*void graph_print(const graph *g)
 {
 
-}
+}*/
 

@@ -8,11 +8,17 @@
 
 EXE = is_connected
 
-#SRC = ../datastructures-v1.0.8.2/src/stack/stack.c
-#OBJ = $(SRC:.c=.o)
+SRC_queue = ../datastructures-v1.0.8.2/src/queue/queue.c
+SRC_dlist = ../datastructures-v1.0.8.2/src/dlist/dlist.c
+SRC_array_1d = ../datastructures-v1.0.8.2/src/array_1d/array_1d.c
+SRC_list = ../datastructures-v1.0.8.2/src/list/list.c
+
+SRC = $(SRC_queue) $(SRC_dlist) $(SRC_array_1d) $(SRC_list)
+
+OBJ = $(SRC:.c=.o)
 
 CC = gcc
-CFLAGS = -std=c99 -Wall -g	#-I../datastructures-v1.0.8.2/include
+CFLAGS = -std=c99 -Wall -g -I../datastructures-v1.0.8.2/include
 
 all:	$(EXE)
 
@@ -23,7 +29,7 @@ obj:	$(OBJ)
 clean:
 	-rm -f $(EXE) $(OBJ)
 	
-is_connected: is_connected.c
+is_connected: is_connected.c graph.c $(SRC)
 	gcc $^ -o $@ $(CFLAGS) 
 
 memtest: is_connected
