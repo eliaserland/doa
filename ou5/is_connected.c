@@ -8,7 +8,7 @@
 #include "graph.h"
 #include "queue.h"
 
-#define BUFSIZE 300		/* Max 300 char per line of input map file. */
+#define BUFSIZE 300	/* Max 300 char per line in the input map file. */
 
 
 
@@ -172,13 +172,13 @@ bool find_path(graph *g,node *src,node *dest)
 					break;
 				}
 			}
-			// Traverse list to next neighbour.
+			// Traverse the list to the next neighbour.
 			pos = dlist_next(neighbour_list, pos);
 		}
 		// Destroy the list.
 		dlist_kill(neighbour_list);
 
-		// If question already has been answered, exit the while-loop.
+		// If the question has been answered, exit the while-loop.
 		if (path_exists) {
 			break;
 		}
@@ -186,10 +186,10 @@ bool find_path(graph *g,node *src,node *dest)
 	// Destroy the queue. 
 	queue_kill(q);
 
-	// Reset seen status of all nodes in graph.
+	// Reset the seen status of all nodes in the graph.
 	graph_reset_seen(g);
 
-	// Return answer to question.
+	// Return the answer to the question.
 	return path_exists; 
 }
 
