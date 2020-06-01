@@ -8,37 +8,65 @@
 #include "graph.h"
 #include "queue.h"
 
-#define BUFSIZE 300	/* Max 300 char per line in the input map file. */
+#define BUFSIZE 300	/* Max 300 chars per line in the input map file. */
 
+/* 
+ * OU5 - Mandatory exercise 5 for the "Datastructures and algorithms" course at
+ * the Department of Computing Science, Umea University. The program reads a map
+ * file detailing the structure of an arbitrary directed graph and answers 
+ * the question whether or not there is a path between two nodes supplied by the
+ * user.
+ * 
+ * Author: Elias Olofsson (tfy17eon@cs.umu.se)
+ * 
+ * Based on earlier code by: Niclas Borlin (niclas.borlin@cs.umu.se)
+ *
+ * Version information:
+ *   v1.0  2020-06-05: First public version.
+*/
 
+// ==========================================================================
 
-
-
-/* Return position of first non-whitespace character or -1 if only
-   white-space is found. */
+/** 
+ * first_non_white_space() - Find the first non-whitespace char of a string.
+ * @s: Null-terminated string to be inspected.
+ * 
+ * Returns: The position of the first non-whitespace character, or -1 if only 
+ * 	    whitespace is found.
+ */
 int first_non_white_space(const char *s)
 {	
-	/* Start at first char. Advance until we hit EOL as long as we're 
-	   loooking at white-space. */
+	/* Start at the first char. Advance until we hit EOL (NULL) as long as
+	   we are loooking at white-space. */
         int i = 0; 
         while (s[i] && isspace(s[i])) {
                 i++;
         }
         if (s[i]) {
-                return i;  // Return position of found a non-white-space char.
+                return i;  // Return position of the non-whitespace char.
         } else {
-                return -1; // Return fail.
+                return -1; // Return fail, only whitespace found.
         }
 }
 
-/* Return true if s only contains whitespace */
+/**
+ * line_is_blank() - Check if line is blank, i.e. only containing whitespace.
+ * @s: Null-terminated string to be inspected.
+ * 
+ * Returns: True if s only contains whitespace characters.
+ */
 bool line_is_blank(const char *s)
 {
-        // Line is blank if it only contained white-space chars.
         return first_non_white_space(s) < 0;
 }
 
-/* Return true if s is a comment line, i.e. first non-whitespc char is '#' */
+/**
+ * line_is_comment() - Check if line is comment line.  
+ * @s: Null-terminated string to be inspected.
+ *
+ * Returns: True if line is comment line, i.e. the first non-whitespace char is 
+ * 	    '#'. 
+ */
 bool line_is_comment(const char *s)
 {
         int i = first_non_white_space(s);
@@ -47,22 +75,22 @@ bool line_is_comment(const char *s)
 
 /**
  * populate_graph() - Create and populate a new graph according to file.
- * @filename: A string containing the file name of file to open.
+ * @filename: A string containing the file name of the map file to open.
  *
  * Returns: Pointer to a new and populated graph.
  */
 graph *populate_graph(const char *filename)
 {
-	FILE *in; 			// Pointer to input file
-	char line[BUFSIZE];     	// Input buffer
-	
-	// Try to open the input file
-	in = fopen(filename, "r");
+	// Allocate a file pointer and open the input file.
+	FILE *in = fopen(filename, "r");
 	if (in == NULL) {
-		fprintf(stderr, "Couldn't open input file %s: %s\n", 
+		fprintf(stderr, "Could not open input file %s: %s\n", 
 			filename, strerror(errno));
 		exit(EXIT_FAILURE);
 	} 
+
+	// and input string buffer.
+	char line[BUFSIZE];     
 
 	// Pre-allocations
 	bool first_line = true;
@@ -71,15 +99,15 @@ graph *populate_graph(const char *filename)
 	char node_dst_str[40];
 	graph *g; 
 
-	// Repeat until end-of-file
+	// Read line from input file and repeat for each line until end-of-file.
 	while (fgets(line, BUFSIZE, in)!= NULL) {
+		// Ignore blank lines and comment lines.
 		if (line_is_blank(line) || line_is_comment(line)) {
-                        // Ignore blank lines and comment lines.
                         continue;
                 }
 
-		/* Extract integer from first line, create a new graph, then 
-		insert each following node pair. */
+		/* Extract the integer from the first line, create a new graph, 
+		   then insert each following node pair. */
 		if (first_line){
 			sscanf(line,"%d", &nr_edges);
 			//printf("Number of edges in graph: %d.\n", nr_edges);
@@ -98,14 +126,14 @@ graph *populate_graph(const char *filename)
 			node *node_src = graph_find_node(g, node_src_str);
 			node *node_dst = graph_find_node(g, node_dst_str);
 
-			// Insert the edge into graph.
+			// Insert the edge into the graph.
 			graph_insert_edge(g, node_src, node_dst);
 		}
 	}
 
-	// Close file
+	// Close the input file.
 	if (fclose(in)) {
-                fprintf(stderr, "Failed to close %s: %s\n", filename,
+                fprintf(stderr, "Failed to close input file %s: %s\n", filename,
 			strerror(errno));
                 exit(EXIT_FAILURE);
         }
@@ -114,9 +142,9 @@ graph *populate_graph(const char *filename)
 
 /** find_path() - Answers the question if there is a path from the source node 
  * 		  to the destination node.
- * @g: Pointer to the graph which should be traversed.
- * @src: Pointer to source node.
- * @dest: Pointer to destination node.
+ * @g: Pointer to the graph to be traversed.
+ * @src: Pointer to the source node.
+ * @dest: Pointer to the destination node.
  * 
  * Returns: True if there is a path from the source to the destination.
  */
