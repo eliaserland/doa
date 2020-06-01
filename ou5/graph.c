@@ -7,35 +7,32 @@
 #include "array_1d.h"
 #include "dlist.h"
 
-
-/*	OLD HEADER - CHANGE THIS TEXT
- * Declaration of a generic graph for the "Datastructures and
- * algorithms" courses at the Department of Computing Science, Umea
- * University. The graph stores nodes and edges of a directed or
- * undirected graph. After use, the function graph_kill() must
- * be called to de-allocate the dynamic memory used by the graph
- * itself. The de-allocation of any dynamic memory allocated for the
- * node names is the responsibility of the user of the graph.
+/*
+ * Implementation of a generic graph for the "Datastructures and algorithms" 
+ * course at the Department of Computing Science, Umea University. The graph 
+ * stores nodes and edges of a directed or undirected graph. The graph is 
+ * constructed using an array to contain all the nodes, and a directed list for 
+ * each node containing that node's immediate neighbours. The node labels may 
+ * only be of string type. After use, the function graph_kill() must be called 
+ * to free the dynamic memory used by the graph itself. At node insertion, a 
+ * dynamic copy of the node label is made and inserted into the graph, which 
+ * consequently also will be de-allocated when the graph is destroyed through 
+ * graph_kill(). 
+ * 
+ * Note: Only the functions neccessary to complete the task of OU5 has been 
+ * implemented. Thus not all functions seen in the header file "graph.h" has 
+ * been realized.  
  *
- * Author: Niclas Borlin (niclas.borlin@cs.umu.se)
+ * Author: Elias Olofsson (tfy17eon@cs.umu.se)
+ * 
+ * Based on earlier code by: Niclas Borlin (niclas.borlin@cs.umu.se)
  *
  * Version information:
- *   v1.0  2019-02-21: First public version.
-
- *   v1.01 2019-02-26: Modified include directives for header files
- *                     from the codebase to use "" to handle case when
- *                     student stores all header files in the current
- *                     directory. See
- *                     https://stackoverflow.com/questions/21593/what-is-the-difference-between-include-filename-and-include-filename.
- *   v1.02 2019-03-01: Doc update in graph_node_is_seen().
- *   v1.1  2019-03-06: Changed several const node * to node *.
- *                     Fixed doc bug to state that any dynamic memory allocated
- *                     to the node NAMES is the resposibility of the user.
+ *   v1.0  2020-06-05: First public version.
  */
 
 // ====================== PUBLIC DATA TYPES ==========================
 
-// Anonymous declarations of node and graph.
 struct node {
 	char *label;
 	bool is_seen;
@@ -81,8 +78,8 @@ char *copy_string(const char *s)
  * clone_dlist() - Create a dynamic copy of a dlist.
  * @l: pointer to dlist to clone.
  * 
- * Allocates memory and clones the contents of l into a new dynamic directed 
- * list. List has to contain strings as values.  
+ * Allocates memory and clones the contents of l into a new dynamic and directed 
+ * list. The list must have strings as its elements.  
  * 
  * Returns: Pointer to the copy of l. 
  */
@@ -291,10 +288,15 @@ graph *graph_reset_seen(graph *g)
  */
 graph *graph_insert_edge(graph *g, node *n1, node *n2)
 {
-	int i = 0;
+	// Allocate flags and pointer to dlist. 
 	bool n1_found = false;
 	bool n2_found = false;
 	dlist *neighbourlist;
+	
+	/* Traverse the array of nodes and verify that both nodes exists 
+	   within the graph. If the source node is found, save pointer to its 
+	   list of neighbours for later. */
+	int i = 0;
 	while (array_1d_has_value(g->node_array, i)) {
 		node *n = array_1d_inspect_value(g->node_array, i);
 		if (nodes_are_equal(n, n1)) {
@@ -374,6 +376,8 @@ graph *graph_insert_edge(graph *g, node *n1, node *n2)
  */
 dlist *graph_neighbours(const graph *g,const node *n)
 {
+	/* Traverse the array of nodes until the specific node is found and then
+	   create a dlist clone. */
 	int i = 0;
 	dlist *l;
 	while (array_1d_has_value(g->node_array, i)) {
@@ -382,6 +386,7 @@ dlist *graph_neighbours(const graph *g,const node *n)
 			/* Node match. Create a dlist copy of this node's 
 			neighbours to return. */
 			l = clone_dlist(n->neighbours);
+			break;
 		}
 		i++;		
 	}
@@ -404,7 +409,7 @@ void graph_kill(graph *g)
 		// Inspect the node.
 		node *n = array_1d_inspect_value(g->node_array, i);
 		
-		// Traverse the list and deallocate each value.
+		// Traverse the list and deallocate each cell and value.
 		dlist_pos p = dlist_first(n->neighbours); 
 		while (!dlist_is_end(n->neighbours, p)) {
 			char *v = dlist_inspect(n->neighbours, p);
