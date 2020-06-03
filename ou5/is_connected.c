@@ -183,7 +183,7 @@ graph *populate_graph(const char *filename)
  * 
  * Returns: True if there is a path from the source to the destination node.
  */
-bool find_path(graph *g,node *src,node *dest)
+bool find_path(graph *g, node *src, node *dest)
 {	
 	// Check if source and destination nodes are the same.
 	if (nodes_are_equal(src, dest)) {
