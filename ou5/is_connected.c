@@ -14,8 +14,8 @@
  * OU5 - Mandatory exercise 5 for the "Datastructures and algorithms" course at
  * the Department of Computing Science, Umea University. The program reads a map
  * file detailing the structure of an directed graph and interactively answers 
- * the question of whether or not there is a path from a source to a destination
- * node supplied by the user.
+ * the question of whether or not there is a path from a source node to a 
+ * destination node supplied by the user.
  * 
  * Author: Elias Olofsson (tfy17eon@cs.umu.se)
  * 
@@ -274,14 +274,14 @@ int main(int argc, char **argv)
 			int out = sscanf(str, "%40s %40s", src, dst);
 			if (out == EOF) {
 				printf("Could not interpret the input, please " 
-					"try again.\n");
+					"try again.\n\n");
 				continue;
 			}
 
 			// Verify that user has put in two separate arguments.
 			if (src[0] == 0 || dst[0] == 0) {
 				printf("Please enter two nodes, separated by " 
-				       "whitespace.\n");
+				       "whitespace.\n\n");
 				continue;
 			}
 			
@@ -292,22 +292,22 @@ int main(int argc, char **argv)
 			// Check that both pointers are valid.
 			if (node_src == NULL) {
 				printf("Node %s not found. Please input an " 
-				       "existing node.\n", src);
+				       "existing node.\n\n", src);
 				continue;
 			} 
 			if (node_dst == NULL) {
 				printf("Node %s not found. Please input an "
-				       "existing node.\n", dst);
+				       "existing node.\n\n", dst);
 				continue;
 			}
 			
 			/* Perform connectivity test and print the result. */
 			path_test = find_path(g, node_src, node_dst);
 			if (path_test) {
-				printf("There is a path from %s to %s.\n", 
+				printf("There is a path from %s to %s.\n\n", 
 					src, dst);
 			} else {
-				printf("There is no path from %s to %s.\n", 
+				printf("There is no path from %s to %s.\n\n", 
 					src, dst);
 			}	
 		}
