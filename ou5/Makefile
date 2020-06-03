@@ -4,7 +4,7 @@
 # Useage:
 # make 					- compile all binaries
 # make clean				- clean all binaries 
-# make memtest file=maps/1-airmap1.map	- test for memory leaks with valgrind
+# make memtest args=maps/1-airmap1.map	- test for memory leaks with valgrind
 
 EXE = is_connected
 
@@ -33,4 +33,4 @@ is_connected: is_connected.c graph.c $(SRC)
 	gcc $^ -o $@ $(CFLAGS) 
 
 memtest: is_connected
-	valgrind --leak-check=full --show-reachable=yes ./$< $(file)
+	valgrind --leak-check=full --show-reachable=yes ./$< $(args)

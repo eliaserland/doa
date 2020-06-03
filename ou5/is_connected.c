@@ -84,7 +84,7 @@ graph *populate_graph(const char *filename)
 	// Allocate a file pointer and open the input file.
 	FILE *in = fopen(filename, "r");
 	if (in == NULL) {
-		fprintf(stderr, "Could not open input file %s: %s\n", 
+		fprintf(stderr, "FAIL: Could not open the input file %s: %s\n", 
 			filename, strerror(errno));
 		exit(EXIT_FAILURE);
 	} 
@@ -94,9 +94,9 @@ graph *populate_graph(const char *filename)
 	graph *g;
 	int nr_edges;
 	char line[BUFSIZE];
-	char node_src_str[40];
-	char node_dst_str[40];
-	bool first_line = true;	 
+	char src_str[40];
+	char dst_str[40];
+	bool is_first_line = true;	 
 
 	/* Read line from input file and repeat until end-of-file is reached.
 	   Extract the integer from the first non-blank and non-comment line, 
@@ -111,36 +111,65 @@ graph *populate_graph(const char *filename)
                 }
 
 		// Single out the first non-comment, non-blank line.
-		if (first_line){
+		if (is_first_line){
 			// Extract integer.
-			sscanf(line,"%d", &nr_edges);
+			int out = sscanf(line,"%d", &nr_edges);
+			
+			// Verify successful read by sscanf.
+			if (out == EOF || out == 0) {
+				fprintf(stderr, "FAIL: Incorrect map format. "
+				        "Expected integer on first non-comment,"
+					" non-blank line.\n");
+				exit(EXIT_FAILURE);
+			}
+
 			// Create graph.
 			g = graph_empty(2*nr_edges);
+			
 			// Flag that we have passed the first line of interest.
-			first_line = false;
+			is_first_line = false;
 		} else {
+			// Set first char to NULL in both string buffers. 
+			src_str[0] = 0;
+			dst_str[0] = 0;
+
 			/* Extract the pair of nodes from the current line. Each
 			   node label is a string of max 40 chars, separated by 
 			   whitespace.	*/
-			sscanf(line, "%40s %40s", node_src_str, node_dst_str);
+			int out = sscanf(line, "%40s %40s", src_str, dst_str);
 			
-			/* Insert the nodes intro the graph.*/
-			graph_insert_node(g, node_src_str);
-			graph_insert_node(g, node_dst_str);
+			// Verify successful read by sscanf.
+			if (out == EOF) {
+				fprintf(stderr, "FAIL: Could not interpret map "
+				       "contents: %s.\n", strerror(errno));
+				exit(EXIT_FAILURE);
+			}
+			
+			// Verify that both strings have been written to.
+			if (src_str[0] == 0 || dst_str[0] == 0) {
+				fprintf(stderr, "FAIL: Incorrect map format. "
+				        "Expected two alphanumeric node names "
+					"on each line.\n");
+				exit(EXIT_FAILURE);
+			}
+
+			// Insert the nodes into the graph.
+			graph_insert_node(g, src_str);
+			graph_insert_node(g, dst_str);
 			
 			// Get the posititons of the recently inserted nodes. 
-			node *node_src = graph_find_node(g, node_src_str);
-			node *node_dst = graph_find_node(g, node_dst_str);
+			node *src = graph_find_node(g, src_str);
+			node *dst = graph_find_node(g, dst_str);
 
 			// Insert the edge into the graph.
-			graph_insert_edge(g, node_src, node_dst);
+			graph_insert_edge(g, src, dst);
 		}
 	}
 
 	// Close the input file.
 	if (fclose(in)) {
-                fprintf(stderr, "Failed to close input file %s: %s\n", filename,
-			strerror(errno));
+                fprintf(stderr, "FAIL: Could not close the input file %s: %s\n",
+		        filename, strerror(errno));
                 exit(EXIT_FAILURE);
         }
 	return g;

@@ -9,7 +9,7 @@
             "type": "cppdbg",
             "request": "launch",
             "program": "${fileDirname}/${fileBasenameNoExtension}",
-            "args": ["/home/elias/Documents/doa/ou5/maps/1-airmap1.map"],
+            "args": ["/home/elias/Documents/doa/ou5/maps/2-repeated-questions.map"],
             "stopAtEntry": false,
             "cwd": "${workspaceFolder}",
             "environment": [],
