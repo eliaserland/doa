@@ -9,7 +9,7 @@
             "type": "cppdbg",
             "request": "launch",
             "program": "${fileDirname}/${fileBasenameNoExtension}",
-            "args": ["/home/elias/Documents/doa/ou5/maps/2-repeated-questions.map"],
+            "args": ["/home/elias/Documents/doa/ou5/maps/6-single-edge.map"],
             "stopAtEntry": false,
             "cwd": "${workspaceFolder}",
             "environment": [],

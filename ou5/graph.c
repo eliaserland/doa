@@ -29,6 +29,8 @@
  *
  * Version information:
  *   v1.0  2020-06-05: First public version.
+ *   v2.0  2020-06-12: Fixed bug where the code would traverse out of the valid
+ * 		       range of the node_array, if the array was fully populated.
  */
 
 // ====================== PUBLIC DATA TYPES ==========================
@@ -180,7 +182,8 @@ graph *graph_insert_node(graph *g, const char *s)
 	/* While current position in array is nonempty, check for duplicate 
 	   node. */
 	int i = 0;
-	while(array_1d_has_value(g->node_array, i)) {
+	int high = array_1d_high(g->node_array);
+	while((i <= high) && array_1d_has_value(g->node_array, i)) {
 		// Inspect node
 		node *n = array_1d_inspect_value(g->node_array, i);
 		if (strcmp(s, n->label) == 0) {
@@ -221,7 +224,8 @@ node *graph_find_node(const graph *g, const char *s)
 {
 	// Traverse array until node is found, else return NULL.
 	int i = 0;
-	while (array_1d_has_value(g->node_array, i)) {
+	int high = array_1d_high(g->node_array);
+	while ((i <= high) && array_1d_has_value(g->node_array, i)) {
 		node *n = array_1d_inspect_value(g->node_array, i);
 		if (strcmp(s, n->label) == 0) {
 			// Node match, return pointer to node. 
@@ -268,7 +272,8 @@ graph *graph_node_set_seen(graph *g, node *n, bool seen)
 graph *graph_reset_seen(graph *g)
 {
 	int i = 0;
-	while (array_1d_has_value(g->node_array, i)) {
+	int high = array_1d_high(g->node_array);
+	while ((i <= high) && array_1d_has_value(g->node_array, i)) {
 		node *n = array_1d_inspect_value(g->node_array, i);
 		n->is_seen = false;
 		i++;
@@ -297,7 +302,8 @@ graph *graph_insert_edge(graph *g, node *n1, node *n2)
 	   within the graph. If the source node is found, save pointer to its 
 	   list of neighbours for later. */
 	int i = 0;
-	while (array_1d_has_value(g->node_array, i)) {
+	int high = array_1d_high(g->node_array);
+	while ((i <= high) && array_1d_has_value(g->node_array, i)) {
 		node *n = array_1d_inspect_value(g->node_array, i);
 		if (nodes_are_equal(n, n1)) {
 			// Source node match, flag and save dlist pointer.
@@ -378,9 +384,11 @@ dlist *graph_neighbours(const graph *g,const node *n)
 {
 	/* Traverse the array of nodes until the specific node is found and then
 	   create a dlist clone. */
-	int i = 0;
+
 	dlist *l;
-	while (array_1d_has_value(g->node_array, i)) {
+	int i = 0;
+	int high = array_1d_high(g->node_array);
+	while ((i <= high) && array_1d_has_value(g->node_array, i)) {
 		node *n_current = array_1d_inspect_value(g->node_array, i);
 		if (nodes_are_equal(n, n_current)) {
 			/* Node match. Create a dlist copy of this node's 
@@ -405,7 +413,8 @@ void graph_kill(graph *g)
 {
 	// Traverse the array and deallocate each node structure. 
 	int i = 0;
-	while(array_1d_has_value(g->node_array, i)) {
+	int high = array_1d_high(g->node_array);
+	while((i <= high) && array_1d_has_value(g->node_array, i)) {
 		// Inspect the node.
 		node *n = array_1d_inspect_value(g->node_array, i);
 		
