@@ -1,0 +1,17 @@
+Changes for OU5, DoA LP4 2020.
+
+Author:	Elias Olofsson (tfy17eon@cs.umu.se)
+
+Version information:
+  v1.0 2020-06-05: First public version.
+		   
+  v2.0 2020-06-13: Fixed a bug in the graph datastructure implementation graph.c 
+		   where the code would traverse past the end of the node_array 
+		   if the array was fully populated. The affected functions are 
+		   graph_insert_node(), graph_find_node(), graph_reset_seen(), 
+		   graph_insert_edge(), graph_neighbours() and graph_kill(). 
+		   The same fix has been applied to all the mentioned functions.
+		   
+		   The report has been complemented by a pseudo-code of the 
+		   breadth-first search algorithm in sec.(4). 
+

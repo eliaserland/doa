@@ -29,8 +29,8 @@
  *
  * Version information:
  *   v1.0  2020-06-05: First public version.
- *   v2.0  2020-06-12: Fixed bug where the code would traverse out of the valid
- * 		       range of the node_array, if the array was fully populated.
+ *   v2.0  2020-06-13: Fixed bug where the code would traverse out of the valid
+ * 		       range of the node_array if the array was fully populated.
  */
 
 // ====================== PUBLIC DATA TYPES ==========================
